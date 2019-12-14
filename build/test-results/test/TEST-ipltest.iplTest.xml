@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ipltest.iplTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-12-14T11:35:50" hostname="mohit-Inspiron-15-3567" time="0.307">
+  <properties/>
+  <testcase name="readIPLMostRunsCsvFile_returnNumberOfRecords" classname="ipltest.iplTest" time="0.307"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
