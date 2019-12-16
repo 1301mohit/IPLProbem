@@ -3,10 +3,10 @@ package ipl;
 public class IPLException extends Exception {
 
     public enum ExceptionType {
-        NO_SUCH_FILE
+        NO_DATA_FOUND, NO_SUCH_FILE
     }
 
-    ExceptionType type;
+    public ExceptionType type;
 
     public IPLException() {}
 
