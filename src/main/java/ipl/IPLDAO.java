@@ -1,7 +1,5 @@
 package ipl;
 
-import com.opencsv.bean.CsvBindByName;
-
 public class IPLDAO {
 
     String position;
@@ -10,14 +8,15 @@ public class IPLDAO {
     String innings;
     String runs;
     String highestScore;
-    double  average;
+    double average;
     String strikeRate;
     String century;
     String fifty;
     String four;
     String six;
 
-    public IPLDAO() { }
+    public IPLDAO() {
+    }
 
     public IPLDAO(IPLMostRun iplMostRun) {
         this.position = iplMostRun.position;
@@ -33,4 +32,27 @@ public class IPLDAO {
         this.four = iplMostRun.four;
         this.six = iplMostRun.six;
     }
+
+    @Override
+    public String toString() {
+        return "IPLDAO{" +
+                "position='" + position + '\'' +
+                ", playerName='" + playerName + '\'' +
+                ", match='" + match + '\'' +
+                ", innings='" + innings + '\'' +
+                ", runs='" + runs + '\'' +
+                ", highestScore='" + highestScore + '\'' +
+                ", average=" + average +
+                ", strikeRate='" + strikeRate + '\'' +
+                ", century='" + century + '\'' +
+                ", fifty='" + fifty + '\'' +
+                ", four='" + four + '\'' +
+                ", six='" + six + '\'' +
+                '}';
+    }
+
+    public IPLMostRun getIplDTO() {
+        return new IPLMostRun(position, playerName, match, innings, runs, highestScore, average, strikeRate, century, fifty, four, six);
+    }
+
 }

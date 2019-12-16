@@ -1,5 +1,6 @@
 package ipl;
 
+import com.google.gson.Gson;
 import com.opencsvbuilder.CSVBuilderException;
 import com.opencsvbuilder.CSVBuilderFactory;
 import com.opencsvbuilder.ICSVBuilder;
@@ -9,18 +10,25 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class IPLAnalyser {
-    public List<IPLMostRun> loadIplMostRun(String csvFilePath) throws IPLException {
-        List<IPLMostRun> iplList = new ArrayList<>();
+
+    public enum IPLParameter {
+        AVERAGE, STRIKE_RATE
+    }
+
+    List<IPLMostRun> iplList = null;
+
+    public List<IPLDAO> loadIplMostRun(String csvFilePath) throws IPLException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            iplList = csvBuilder.getCsvFileList(reader, IPLMostRun.class);
-            return iplList;
+            List<IPLMostRun> iplList = csvBuilder.getCsvFileList(reader, IPLMostRun.class);
+            List<IPLDAO> listOfDAO = iplList.stream().map(iplDTO -> new IPLDAO(iplDTO)).collect(Collectors.toList());
+            return listOfDAO;
         } catch (IOException e) {
             throw new IPLException("Wrong Input", IPLException.ExceptionType.NO_SUCH_FILE);
         } catch (CSVBuilderException e) {
@@ -28,12 +36,15 @@ public class IPLAnalyser {
         }
     }
 
-    public List<IPLMostRun> sort(String csvFilePath) throws IPLException {
-        List<IPLMostRun> listOfRecords = loadIplMostRun(csvFilePath);
-        if(listOfRecords.size() == 0)
+    public String sortForAverage(String csvFilePath, IPLParameter parameter) throws IPLException {
+        IComparator comparator = FactoryForComparator.getComparator(IPLParameter.AVERAGE);
+        List<IPLDAO> listOfRecords = loadIplMostRun(csvFilePath);
+        if (listOfRecords.size() == 0)
             throw new IPLException("List is empty", IPLException.ExceptionType.NO_DATA_FOUND);
-        Comparator<IPLMostRun> comparatorForAverage = Comparator.comparing(census -> census.average, Comparator.reverseOrder());
-        listOfRecords = listOfRecords.stream().sorted(comparatorForAverage).collect(Collectors.toList());
-        return listOfRecords;
+        Comparator<IPLDAO> comparatorForAverage = comparator.getComparator();
+        iplList = listOfRecords.stream().sorted(comparatorForAverage).map(ipl -> ipl.getIplDTO()).collect(Collectors.toList());
+        String iplJson = new Gson().toJson(iplList);
+        return iplJson;
     }
+
 }

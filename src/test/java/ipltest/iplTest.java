@@ -1,5 +1,6 @@
 package ipltest;
 
+import com.google.gson.Gson;
 import ipl.IPLAnalyser;
 import ipl.IPLException;
 import ipl.IPLMostRun;
@@ -18,7 +19,8 @@ public class iplTest {
         try{
             IPLAnalyser iplAnalyser = new IPLAnalyser();
             List listOFRecords = iplAnalyser.loadIplMostRun(IPL_2019_MOST_RUN_CSV_FILE);
-            Assert.assertEquals(101, listOFRecords.size());
+            listOFRecords.forEach(System.out::println);
+            Assert.assertEquals(5, listOFRecords.size());
         } catch(IPLException e){}
     }
 
@@ -35,8 +37,9 @@ public class iplTest {
     @Test
     public void readIPLMostRunsCsvFile_returnToppingBattingAveragePlayerName() throws IPLException {
         IPLAnalyser iplAnalyser = new IPLAnalyser();
-        List<IPLMostRun> sortedList = iplAnalyser.sort(IPL_2019_MOST_RUN_CSV_FILE);
-        Assert.assertEquals("MS Dhoni", sortedList.get(0).getPlayerName());
+        String sortedData = iplAnalyser.sortForAverage(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.AVERAGE);
+        IPLMostRun[] ipl = new Gson().fromJson(sortedData, IPLMostRun[].class);
+        Assert.assertEquals("MS Dhoni", ipl[0].getPlayerName());
     }
 
 }
