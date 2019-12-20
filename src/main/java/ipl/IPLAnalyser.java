@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class IPLAnalyser {
 
     public enum IPLParameter {
-        AVERAGE, STRIKE_RATE
+        AVERAGE, STRIKE_RATE, SIX, FOUR;
     }
 
     List<IPLMostRun> iplList = null;
@@ -37,12 +37,25 @@ public class IPLAnalyser {
     }
 
     public String sortForAverage(String csvFilePath, IPLParameter parameter) throws IPLException {
-        IComparator comparator = FactoryForComparator.getComparator(IPLParameter.AVERAGE);
+        IComparator comparator = FactoryForComparator.getComparator(parameter);
         List<IPLDAO> listOfRecords = loadIplMostRun(csvFilePath);
         if (listOfRecords.size() == 0)
             throw new IPLException("List is empty", IPLException.ExceptionType.NO_DATA_FOUND);
         Comparator<IPLDAO> comparatorForAverage = comparator.getComparator();
         iplList = listOfRecords.stream().sorted(comparatorForAverage).map(ipl -> ipl.getIplDTO()).collect(Collectors.toList());
+        String iplJson = new Gson().toJson(iplList);
+        return iplJson;
+    }
+
+    public String sortForMaximumSixAndFour(String csvFilePath, IPLParameter parameterForSix, IPLParameter parameterForFour) throws IPLException {
+        IComparator comparatorForSix = FactoryForComparator.getComparator(parameterForSix);
+        IComparator comparatorForFour = FactoryForComparator.getComparator(parameterForFour);
+        List<IPLDAO> listOfRecords = loadIplMostRun(csvFilePath);
+        if(listOfRecords.size() == 0)
+            throw new IPLException("List is empty", IPLException.ExceptionType.NO_DATA_FOUND);
+        Comparator<IPLDAO> comparator = comparatorForSix.getComparator().thenComparing(comparatorForFour.getComparator());
+        iplList = listOfRecords.stream().sorted(comparator).map(ipl -> ipl.getIplDTO()).collect(Collectors.toList());
+        iplList.stream().forEach(System.out::println);
         String iplJson = new Gson().toJson(iplList);
         return iplJson;
     }
