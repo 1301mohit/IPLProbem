@@ -22,6 +22,8 @@ public class IPLAnalyser {
     }
 
     List<IPLMostRun> iplList = null;
+    List<IComparator> listOfComparatorParameter = new ArrayList<>();
+    List<Comparator> listOfComparator = new ArrayList<>();
 
     public List<IPLDAO> loadIplMostRun(String csvFilePath) throws IPLException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
@@ -36,24 +38,19 @@ public class IPLAnalyser {
         }
     }
 
-    public String sortForAverage(String csvFilePath, IPLParameter parameter) throws IPLException {
-        IComparator comparator = FactoryForComparator.getComparator(parameter);
+    public String sort(String csvFilePath, IPLParameter... parameters) throws IPLException {
+        Comparator<IPLDAO> comparator = null;
+        for (IPLParameter parameter: parameters
+             ) {
+            listOfComparatorParameter.add(FactoryForComparator.getComparator(parameter));
+        }
         List<IPLDAO> listOfRecords = loadIplMostRun(csvFilePath);
         if (listOfRecords.size() == 0)
             throw new IPLException("List is empty", IPLException.ExceptionType.NO_DATA_FOUND);
-        Comparator<IPLDAO> comparatorForAverage = comparator.getComparator();
-        iplList = listOfRecords.stream().sorted(comparatorForAverage).map(ipl -> ipl.getIplDTO()).collect(Collectors.toList());
-        String iplJson = new Gson().toJson(iplList);
-        return iplJson;
-    }
-
-    public String sortForMaximumSixAndFour(String csvFilePath, IPLParameter parameterForSix, IPLParameter parameterForFour) throws IPLException {
-        IComparator comparatorForSix = FactoryForComparator.getComparator(parameterForSix);
-        IComparator comparatorForFour = FactoryForComparator.getComparator(parameterForFour);
-        List<IPLDAO> listOfRecords = loadIplMostRun(csvFilePath);
-        if(listOfRecords.size() == 0)
-            throw new IPLException("List is empty", IPLException.ExceptionType.NO_DATA_FOUND);
-        Comparator<IPLDAO> comparator = comparatorForSix.getComparator().thenComparing(comparatorForFour.getComparator());
+        if(parameters.length == 1)
+            comparator = listOfComparatorParameter.get(0).getComparator();
+        else if(parameters.length == 2)
+            comparator = listOfComparatorParameter.get(0).getComparator().thenComparing(listOfComparatorParameter.get(1).getComparator());
         iplList = listOfRecords.stream().sorted(comparator).map(ipl -> ipl.getIplDTO()).collect(Collectors.toList());
         iplList.stream().forEach(System.out::println);
         String iplJson = new Gson().toJson(iplList);

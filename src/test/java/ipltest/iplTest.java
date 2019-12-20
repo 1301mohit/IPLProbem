@@ -38,7 +38,7 @@ public class iplTest {
     @Test
     public void readIPLMostRunsCsvFile_returnToppingBattingAveragePlayerName() throws IPLException {
         IPLAnalyser iplAnalyser = new IPLAnalyser();
-        String sortedData = iplAnalyser.sortForAverage(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.AVERAGE);
+        String sortedData = iplAnalyser.sort(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.AVERAGE);
         IPLMostRun[] ipl = new Gson().fromJson(sortedData, IPLMostRun[].class);
         Assert.assertEquals("David Warner", ipl[0].getPlayerName());
     }
@@ -46,7 +46,7 @@ public class iplTest {
     @Test
     public void readIPLMostRunsCsvFile_returnToppingStrikingRatePlayerName() throws IPLException {
         IPLAnalyser iplAnalyser = new IPLAnalyser();
-        String sortedData = iplAnalyser.sortForAverage(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.STRIKE_RATE);
+        String sortedData = iplAnalyser.sort(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.STRIKE_RATE);
         IPLMostRun[] ipl = new Gson().fromJson(sortedData, IPLMostRun[].class);
         Assert.assertEquals("Andre Russell", ipl[0].getPlayerName());
     }
@@ -54,7 +54,7 @@ public class iplTest {
     @Test
     public void readIPLMostRunsCsvFile_returnTopMaximumSixAndFourPlayerName() throws IPLException {
         IPLAnalyser iplAnalyser = new IPLAnalyser();
-        String sortedData = iplAnalyser.sortForMaximumSixAndFour(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.SIX, IPLAnalyser.IPLParameter.FOUR);
+        String sortedData = iplAnalyser.sort(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.SIX, IPLAnalyser.IPLParameter.FOUR);
         IPLMostRun[] ipl = new Gson().fromJson(sortedData, IPLMostRun[].class);
         Assert.assertEquals("Andre Russell", ipl[0].getPlayerName());
     }
