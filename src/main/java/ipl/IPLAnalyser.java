@@ -51,8 +51,9 @@ public class IPLAnalyser {
             comparator = listOfComparatorParameter.get(0).getComparator();
         else if(parameters.length == 2)
             comparator = listOfComparatorParameter.get(0).getComparator().thenComparing(listOfComparatorParameter.get(1).getComparator());
+        else if(parameters.length == 3)
+            comparator = listOfComparatorParameter.get(0).getComparator().thenComparing(listOfComparatorParameter.get(1).getComparator().thenComparing(listOfComparatorParameter.get(2).getComparator()));
         iplList = listOfRecords.stream().sorted(comparator).map(ipl -> ipl.getIplDTO()).collect(Collectors.toList());
-        iplList.stream().forEach(System.out::println);
         String iplJson = new Gson().toJson(iplList);
         return iplJson;
     }

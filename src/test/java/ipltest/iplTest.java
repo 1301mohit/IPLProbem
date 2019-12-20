@@ -59,4 +59,12 @@ public class iplTest {
         Assert.assertEquals("Andre Russell", ipl[0].getPlayerName());
     }
 
+    @Test
+    public void readIPLMostRunsCsvFile_returnTopStrikingRatesWithSixAndFourPlayerName() throws IPLException {
+        IPLAnalyser iplAnalyser = new IPLAnalyser();
+        String sortedData = iplAnalyser.sort(IPL_2019_MOST_RUN_CSV_FILE, IPLAnalyser.IPLParameter.STRIKE_RATE, IPLAnalyser.IPLParameter.SIX, IPLAnalyser.IPLParameter.FOUR);
+        IPLMostRun[] ipl = new Gson().fromJson(sortedData, IPLMostRun[].class);
+        Assert.assertEquals("Andre Russell", ipl[0].getPlayerName());
+    }
+
 }
